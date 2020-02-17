@@ -25,7 +25,8 @@ export default {
       required: false,
       default() {
         return {
-          useTemplating: false
+          useTemplating: false,
+          auth: false
         }
       },
     },
@@ -64,14 +65,17 @@ export default {
   mounted() {
     // Check a few things first
     if(this.src !== '' && this.card != null && this.card != ''){
-      throw 'Please only use src or card, never both!';
+      throw new SyntaxError('Please only use src or card, never both!');
+      return;
+    }
+    if(this.options.useTemplating && ( this.data == null || this.data === '' )){
+      throw new SyntaxError('Data must be passed when using templating');
       return;
     }
 
 
-    console.log(typeof this.src);
-    console.log(typeof this.config);
-    // Check type of src
+
+// Check type of src
     if(this.src.type === Object) {
       console.log("CardObject ->" + this.src)
     } else{
