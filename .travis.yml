@@ -1,0 +1,64 @@
+language: node_js
+node_js:
+  - "12"
+cache:
+  npm: true
+  directories:
+    - ~/.cache
+    - node_modules
+    - $HOME/.cache/pip
+env:
+  global:
+    - AWS_DEFAULT_REGION=us-east-1
+
+before_install:
+  - if [[ $TRAVIS_TAG == "" ]]; then
+    export API_URL=https://tw-synthesis-csw-beta.teamwork.com;
+    else
+    export API_URL=https://tw-synthesis-csw.teamwork.com;
+    fi
+#
+# Uses the .npmrc file that uses env vars for security tokens
+#
+# See:
+# https://docs.npmjs.com/private-modules/ci-server-config
+#
+install:
+  - npm ci
+  - sudo pip install awscli
+
+  # Installing travis artifacts cli
+  - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
+
+script:
+  - npm run lint
+  - npm run build
+
+deploy:
+  # PR release
+  - provider: s3
+    region: eu-west-1
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: integrations-csw-ui-beta
+    cache_control: "no-cache, no-store, max-age=0"
+    skip_cleanup: true
+    local_dir: dist
+    upload-dir: $TRAVIS_BRANCH
+    glob: "*.js"
+    on:
+      all_branches: true
+
+  # Production release
+  - provider: s3
+    region: eu-west-1
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: integrations-csw-ui-beta
+    cache_control: "no-cache, no-store, max-age=100000"
+    skip_cleanup: true
+    local_dir: dist
+    upload-dir: $TRAVIS_BRANCH
+    glob: "*.js"
+    on:
+      tags: true
