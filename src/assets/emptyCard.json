@@ -1,0 +1,12 @@
+{
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "This is an empty Adaptive Cards, pass either src or card as attribute to show a card",
+            "wrap": true
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}

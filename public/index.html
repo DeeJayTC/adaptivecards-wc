@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+</head>
+
+<script type='text/javascript'>
+
+  var cardConfigOptions = {
+    useTemplating: true
+  }
+
+</script>
+<body>
+  <h3>Adaptive Card Component:</h3>
+  <div>
+    <adaptive-card 
+      height="500px" 
+      width="400px" 
+      mode="dark"  
+      src='http://templates.adaptivecards.io/wunderground.com/Forecast.json' />
+  </div>
+  <script>
+    document.querySelector('adaptive-card').addEventListener('link-files', (ev) => {
+      alert('link files: ' + ev.detail[0].selected.join(', '))
+    })
+  </script>
+</body>
+
+</html>
