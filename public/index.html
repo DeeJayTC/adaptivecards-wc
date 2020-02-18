@@ -16,24 +16,13 @@
 </script>
 <body>
   <h3>Adaptive Card Component:</h3>
-  <div style='background:gray;float:left;width:550px;'>
-    <adaptive-card
-      mode="dark" 
-      src="./formSample.json"
-      />
-  </div>
   <div style='float:left;width:550px;margin-left:25px;'>
     <adaptive-card 
-      mode="light"
-      src="./formSample.json"
+      mode="dark"
+      src="https://deejaytc.github.io/adaptivecards-wc/formsample.json"
       />
   </div>
-  <div style='float:left;width:550px;margin-left:25px;'>
-    <adaptive-card 
-      mode="light"
-      src="./formSample.json"
-      />
-  </div>
+
   <div id='cardResult'></div>
   <script>
     var cards = document.querySelectorAll('adaptive-card')

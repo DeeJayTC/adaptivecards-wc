@@ -66,22 +66,15 @@ export default {
         return emptyCard;
       }
 
-      // Try to load from url
-      if(this.validURL(this.src) || this.src.indexOf('./') == 0){
-        axios.get(this.src).then(function(card){
-          console.log(card);
-          return card;
-        });
-      }
-      // No Url we expect it to be object
-      else{
+      if(this.cardRemoteTemplate != null ){
+        return this.cardRemoteTemplate
+      } else {
         if(typeof this.src === String || typeof this.src === Object){
           return typeof this.src === Object ? JSON.stringify(this.src) : this.src;
         }else{
           return errorCard;
         }
       }
-      return errorCard;
     },
     dataParsed() {
       return this.data != null && this.data != undefined && typeof this.data === 'Object' ? JSON.stringify(this.data) : this.data;
@@ -92,10 +85,22 @@ export default {
 
   },
   mounted() {
-    console.log(this.src);
-    this.renderCard();
+    // Try to load from url
+    if(this.validURL(this.src) || this.src.indexOf('./') == 0){
+      this.getCard(); 
+    }else{
+      this.renderCard();
+    }
   },
   methods: {
+    getCard(){
+      axios.get(this.src).then( data => {
+        if(data.status == 200){
+          this.cardRemoteTemplate = data.data
+          this.renderCard();
+        }
+      });
+    },
     validURL(str) {
       var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
@@ -130,7 +135,6 @@ export default {
       card.onExecuteAction = (action) => {
         this.$emit('onActionClicked', action.data);
       };
-
       this.cardElement = card.render();
       this.$el.innerHTML = '';
       this.$el.appendChild(this.cardElement);
@@ -138,6 +142,7 @@ export default {
       if(this.height != '') this.$el.style.height = `${this.height}`;
       }
       catch (ex) {
+          console.log(ex);
         throw new Error('Could not render card: ' + ex);
       }
 

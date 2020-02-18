@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build  --target wc --name adaptive-cards ./src/components/AdaptiveCards.vue --inline-vue",
+    "build": "vue-cli-service build  --target wc --inline-vue --name adaptive-cards ./src/components/AdaptiveCards.vue",
     "lint": "vue-cli-service lint"
   },
   "author": "",

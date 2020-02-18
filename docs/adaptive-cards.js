@@ -9505,12 +9505,12 @@ function normalizeComponent (
   }
 }
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5b8519e3-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/AdaptiveCards.vue?vue&type=template&id=0d366765&shadow
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5b8519e3-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/AdaptiveCards.vue?vue&type=template&id=684d5bcb&shadow
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:this.mode})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/AdaptiveCards.vue?vue&type=template&id=0d366765&shadow
+// CONCATENATED MODULE: ./src/components/AdaptiveCards.vue?vue&type=template&id=684d5bcb&shadow
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.constructor.js
 var es6_regexp_constructor = __webpack_require__("3b2b");
@@ -9607,24 +9607,17 @@ var axios_default = /*#__PURE__*/__webpack_require__.n(axios);
 
       if (this.src === '' && this.card == null || this.card === '') {
         return emptyCard;
-      } // Try to load from url
+      }
 
-
-      if (this.validURL(this.src) || this.src.indexOf('./') == 0) {
-        axios_default.a.get(this.src).then(function (card) {
-          console.log(card);
-          return card;
-        });
-      } // No Url we expect it to be object
-      else {
-          if (typeof this.src === String || typeof this.src === Object) {
-            return typeof this.src === Object ? JSON.stringify(this.src) : this.src;
-          } else {
-            return errorCard;
-          }
+      if (this.cardRemoteTemplate != null) {
+        return this.cardRemoteTemplate;
+      } else {
+        if (typeof this.src === String || typeof this.src === Object) {
+          return typeof this.src === Object ? JSON.stringify(this.src) : this.src;
+        } else {
+          return errorCard;
         }
-
-      return errorCard;
+      }
     },
 
     dataParsed() {
@@ -9638,11 +9631,24 @@ var axios_default = /*#__PURE__*/__webpack_require__.n(axios);
   },
 
   mounted() {
-    console.log(this.src);
-    this.renderCard();
+    // Try to load from url
+    if (this.validURL(this.src) || this.src.indexOf('./') == 0) {
+      this.getCard();
+    } else {
+      this.renderCard();
+    }
   },
 
   methods: {
+    getCard() {
+      axios_default.a.get(this.src).then(data => {
+        if (data.status == 200) {
+          this.cardRemoteTemplate = data.data;
+          this.renderCard();
+        }
+      });
+    },
+
     validURL(str) {
       var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
@@ -9684,6 +9690,7 @@ var axios_default = /*#__PURE__*/__webpack_require__.n(axios);
         if (this.width != '') this.$el.style.width = `${this.width}`;
         if (this.height != '') this.$el.style.height = `${this.height}`;
       } catch (ex) {
+        console.log(ex);
         throw new Error('Could not render card: ' + ex);
       }
     }
