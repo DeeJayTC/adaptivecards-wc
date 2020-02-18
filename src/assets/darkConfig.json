@@ -2,18 +2,18 @@
     "choiceSetInputValueSeparator": ",",
     "supportsInteractivity": true,
     "spacing": {
-        "small": 10,
-        "default": 15,
-        "medium": 18,
-        "large": 22,
+        "small": 8,
+        "default": 12,
+        "medium": 16,
+        "large": 20,
         "extraLarge": 24,
-        "padding": 15
+        "padding": 16
     },
     "separator": {
         "lineThickness": 1,
         "lineColor": "#EEEEEE"
     },
-    "fontStyles": {
+    "fontTypes": {
         "default": {
             "fontFamily": "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
             "fontSizes": {
@@ -46,8 +46,8 @@
         }
     },
     "imageSizes": {
-        "small": 24,
-        "medium": 36,
+        "small": 32,
+        "medium": 52,
         "large": 100
     },
     "containerStyles": {
@@ -264,7 +264,7 @@
         "actionAlignment": "Left"
     },
     "adaptiveCard": {
-        "allowCustomStyle": false
+        "allowCustomStyle": true
     },
     "imageSet": {
         "imageSize": "Medium",

@@ -1,7 +1,8 @@
 {
-  "name": "teamwork-csw-frontend",
+  "name": "adaptivecard-wc",
   "version": "0.4.1",
-  "description": "",
+  "description": "Adaptive Cards webcomponents, as easy as images!",
+  "repository": {"url": "https://github.com/DeeJayTC/adaptivecard-component"},
   "main": "index.js",
   "scripts": {
     "serve": "vue-cli-service serve",

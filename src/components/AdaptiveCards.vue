@@ -1,5 +1,5 @@
 <template>
-  <div class='light' />
+  <div :class='this.mode' />
 </template>
 
 <script>
@@ -20,7 +20,7 @@ export default {
     },
     height:String,
     width:String,
-    useTemplating: Boolean,
+    templating: Boolean,
     showModal: Boolean,
     card: {
       type: Object | String,
@@ -67,15 +67,11 @@ export default {
 
       // Try to load from url
       if(this.validURL(this.src)){
-        fetch(this.src, {
-          mode:'no-cors'
-        }).then(function(response) {
-            if (response.type === 'opaque' || response.ok) {
-              console.log(response)
-            } else {
-              console.log(response)
-            }
-        });
+
+      }
+      // No Url we expect it to be object
+      else{
+
       }
 
      // if (this.cardRemoteTemplate != null) return this.cardRemoteTemplate;
@@ -94,7 +90,8 @@ export default {
     console.log(this.cardParsed);
     console.log(this.dataParsed);
     console.log(this.options);
-    console.log(this.config);
+    console.log(this.mode);
+    console.log(this.templating);
     this.renderCard();
   },
   methods: {
@@ -109,31 +106,31 @@ export default {
     },
     renderCard() {
       try{
-      this.cardHolder = new AdaptiveCards.AdaptiveCard();
-      // Use Default Host Config if not passed
-      this.cardHolder.HostConfig = this.configParsed;
+      var card = new AdaptiveCards.AdaptiveCard();
 
-      if (this.useTemplating && this.data == null) {
+
+      card.hostConfig = new AdaptiveCards.HostConfig(this.configParsed);
+      if (this.templating && this.data == null) {
         this.$el.remove();
         throw new Error('When using templating data is required');
       }
 
-      if (this.useTemplating && this.data != null) {
+      if (this.templating && this.data != null) {
         const template = new Template(this.cardParsed);
         const context = new EvaluationContext();
         context.$root = this.dataParsed;
         var cardToRender = template.expand(context);
 
-        this.cardHolder.parse(cardToRender);
+        card.parse(cardToRender);
       } else {
-        this.cardHolder.parse(this.cardParsed);
+        card.parse(this.cardParsed);
       }
 
-      this.cardHolder.onExecuteAction = (action) => {
+      card.onExecuteAction = (action) => {
         this.$emit('onActionClicked', action, action.data);
       };
 
-      this.cardElement = this.cardHolder.render();
+      this.cardElement = card.render();
       this.$el.innerHTML = '';
       this.$el.appendChild(this.cardElement);
       if(this.width != '') this.$el.style.width = `${this.width}`;
@@ -163,100 +160,78 @@ export default {
 
 </script>
 
-<style scoped>
+<style>
+.dark .ac-media-poster {}
 
- .ac-media-poster {}
-
- .ac-media-poster .empty {
+  .dark .ac-media-poster.empty {
     height: 200px;
     background-color: #F2F2F2;
-}
-
- .th, td  {
-    border:none !important;
-}
-
- .ac-fact-title,
- .ac-fact-value{
-    border: none !important;
-}
-
- .ac-media-playButton {
+  }
+  
+  .dark .ac-media-playButton {
     width: 56px;
     height: 56px;
     border: 1px solid #EEEEEE;
     border-radius: 28px;
     box-shadow: 0px 0px 10px #EEEEEE;
-    background-color: rgba(255, 255, 255, 0 .9);
+    background-color: rgba(255, 255, 255, 0.9);
     color: black;
     cursor: pointer;
-}
-
- .ac-media-playButton-arrow {
+  }
+  
+  .dark .ac-media-playButton-arrow {
     color: black;
-}
-
- .ac-media-playButton:hover {
+  }
+  
+  .dark .ac-media-playButton:hover {
     background-color: white;
-}
-
- .ac-image .ac-selectable {
+  }
+  
+  .dark .ac-image.ac-selectable {
     cursor: pointer;
-}
-
- .ac-image .ac-selectable:hover {
-    background-color: rgba(0, 0, 0, 0 .1);
-}
-
- .ac-image .ac-selectable:active {
-    background-color: rgba(0, 0, 0, 0 .15);
-}
-
-a .ac-anchor {
+  }
+  
+  .dark .ac-image.ac-selectable:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .dark .ac-image.dark .ac-selectable:active {
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+  
+  a.ac-anchor {
     text-decoration: none;
-}
-
-a .ac-anchor:link {
+  }
+  
+  a.ac-anchor:link {
     color: #6264A7;
-}
-
-a .ac-anchor:visited {
+  }
+  
+  a.ac-anchor:visited {
     color: #6264A7;
-}
-
-a .ac-anchor:link:active {
+  }
+  
+  a.ac-anchor:link:active {
     color: #6264A7;
-}
-
-a .ac-anchor:visited:active {
+  }
+  
+  a.ac-anchor:visited:active {
     color: #6264A7;
-}
-
- .ac-container .ac-selectable,  .ac-columnSet .ac-selectable {
+  }
+  
+  .dark .ac-container.ac-selectable, .dark .ac-columnSet.ac-selectable {
     padding: 0px;
-}
-
- .ac-container th{
-    border:none !important;
-}
-
- .ac-container th,td{
-    border:none !important;
-}
-
- .ac-container tr{
-    border:none !important;
-}
-
- .ac-container .ac-selectable:hover,  .ac-columnSet .ac-selectable:hover {
-    background-color: rgba(0, 0, 0, 0 .1) !important;
-}
-
- .ac-container .ac-selectable:active,  .ac-columnSet .ac-selectable:active {
-    background-color: rgba(0, 0, 0, 0 .15) !important;
-}
-
- .ac-pushButton {
+  }
+  
+  .dark .ac-container.ac-selectable:hover, .dark .ac-columnSet.ac-selectable:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .dark .ac-container.ac-selectable:active, .dark .ac-columnSet.ac-selectable:active {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  .dark .ac-pushButton {
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
@@ -269,76 +244,76 @@ a .ac-anchor:visited:active {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    height: 32px;
-    background-color: white;
-    color: #6264A7;
-    border: 2px solid #BFC0DA;
+    height: 34px;
+    background-color: transparent;
+    color: white;
+    border: 2px solid #6165A4;
     border-radius: 4px;
-}
-
- .ac-pushButton:hover {
+  }
+  
+  .dark .ac-pushButton:hover {
+    background-color: #6165A4;
+    border: 2px solid #A7A8DA;
+    color: black;
+  }
+  
+  .dark .ac-pushButton:active {
+    background-color: #6165A4;
+    border: 2px solid #A7A8DA;
+    color: black;
+  }
+  
+  .dark .ac-pushButton.expanded {
+    background-color: #6165A4;
+    border: 2px solid #A7A8DA;
+    color: black;
+  }
+  
+  .dark .ac-pushButton.style-emphasis {
     background-color: #6264A7;
     border: 2px solid #6264A7;
     color: white;
-}
-
- .ac-pushButton:active {
-    background-color: #6264A7;
-    border: 2px solid #6264A7;
-    color: white;
-}
-
- .ac-pushButton .expanded {
-    background-color: #6264A7;
-    border: 2px solid #6264A7;
-    color: white;
-}
-
- .ac-pushButton .style-emphasis {
-    background-color: #6264A7;
-    border: 2px solid #6264A7;
-    color: white;
-}
-
- .ac-input {
+  }
+  
+  .dark .ac-input {
     font-family: "Segoe UI", sans-serif;
     font-size: 14px;
-    color: black;
-}
-
- .ac-input .ac-input-required {
+    color: #EEEEEE;
+  }
+  
+  .dark .ac-input.ac-input-required {
     background-image: linear-gradient(45deg, transparent, transparent 50%, red 50%, red 100%);
     background-position: top right;
-    background-size:  .5em  .5em;
+    background-size: .5em .5em;
     background-repeat: no-repeat;
-}
-
- .ac-input .ac-input-validation-failed {
+  }
+  
+  .dark .ac-input.ac-input-validation-failed {
     border: 1px solid red !important;
-}
-
- .ac-input .ac-textInput {
+  }
+  
+  .dark .ac-input.ac-textInput {
     resize: none;
-}
-
- .ac-input .ac-textInput .ac-multiline {
+  }
+  
+  .dark .ac-input.ac-textInput.ac-multiline {
     height: 72px;
-}
-
- .ac-input .ac-textInput,  .ac-input .ac-numberInput,  .ac-input .ac-dateInput,  .ac-input .ac-timeInput {
+  }
+  
+  .dark .ac-input.ac-textInput, .dark .ac-input.ac-numberInput, .dark .ac-input.ac-dateInput, .dark .ac-input.ac-timeInput {
     height: 31px;
-}
-
- .ac-input .ac-textInput,  .ac-input .ac-numberInput,  .ac-input .ac-dateInput,  .ac-input .ac-timeInput,  .ac-input .ac-multichoiceInput {
-    background-color: #F3F2F1;
-    border: 1px solid #F3F2F1;
+  }
+  
+  .dark .ac-input.ac-textInput, .dark .ac-input.ac-numberInput, .dark .ac-input.ac-dateInput, .dark .ac-input.ac-timeInput, .dark .ac-input.ac-multichoiceInput {
+    background-color: #201E1F;
+    border: 1px solid #201E1F;
     border-radius: 4px;
     padding: 4px 8px 4px 8px;
-}
-
-/* ac-inlineActionButton should set height to the same as ac-input .ac-textInput */
-
- .ac-inlineActionButton {
+  }
+  
+  /* ac-inlineActionButton should set height to the same as ac-input.dark .ac-textInput */
+  
+  .ac-inlineActionButton {
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
@@ -353,20 +328,228 @@ a .ac-anchor:visited:active {
     border: none;
     background-color: transparent;
     height: 31px;
-}
-
- .ac-inlineActionButton .textOnly {
+  }
+  
+  .dark .ac-inlineActionButton.textOnly {
     padding: 0 8px;
-}
-
- .ac-inlineActionButton .iconOnly {
+  }
+  
+  .dark .ac-inlineActionButton.iconOnly {
     padding: 0;
-}
-
- .ac-inlineActionButton:hover {
+  }
+  
+  .dark .ac-inlineActionButton:hover {
     background-color: #EEEEEE;
-}
-
- .ac-inlineActionButton:active {
+  }
+  
+  .dark .ac-inlineActionButton:active {
     background-color: #CCCCCC;
-}
+  }
+  
+  .ac-media-poster {}
+  
+   .light .ac-media-poster.empty {
+      height: 200px;
+      background-color: #F2F2F2;
+  }
+  
+  .th, td  {
+      border:none !important;
+  }
+  
+   .light .ac-fact-title,
+   .light .ac-fact-value{
+      border: none !important;
+  }
+  
+   .light .ac-media-playButton {
+      width: 56px;
+      height: 56px;
+      border: 1px solid #EEEEEE;
+      border-radius: 28px;
+      box-shadow: 0px 0px 10px #EEEEEE;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: black;
+      cursor: pointer;
+  }
+  
+   .light .ac-media-playButton-arrow {
+      color: black;
+  }
+  
+   .light .ac-media-playButton:hover {
+      background-color: white;
+  }
+  
+   .light .ac-image.ac-selectable {
+      cursor: pointer;
+  }
+  
+   .light .ac-image.ac-selectable:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+   .light .ac-image.ac-selectable:active {
+      background-color: rgba(0, 0, 0, 0.15);
+  }
+  
+  a.ac-anchor {
+      text-decoration: none;
+  }
+  
+  a.ac-anchor:link {
+      color: #6264A7;
+  }
+  
+  a.ac-anchor:visited {
+      color: #6264A7;
+  }
+  
+  a.ac-anchor:link:active {
+      color: #6264A7;
+  }
+  
+  a.ac-anchor:visited:active {
+      color: #6264A7;
+  }
+  
+   .light .ac-container.ac-selectable,  .light .ac-columnSet.ac-selectable {
+      padding: 0px;
+  }
+  
+   .light .ac-container th{
+      border:none !important;
+  }
+  
+   .light .ac-container th,td{
+      border:none !important;
+  }
+  
+   .light .ac-container tr{
+      border:none !important;
+  }
+  
+   .light .ac-container.ac-selectable:hover, .ac-columnSet.ac-selectable:hover {
+      background-color: rgba(0, 0, 0, 0.1) !important;
+  }
+  
+   .light .ac-container.ac-selectable:active,  .light .ac-columnSet.ac-selectable:active {
+      background-color: rgba(0, 0, 0, 0.15) !important;
+  }
+  
+   .light .ac-pushButton {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+      vertical-align: middle;
+      cursor: default;
+      font-family: "Segoe UI", sans-serif;
+      font-size: 14px;
+      padding: 4px 10px 5px 10px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      height: 32px;
+      background-color: white;
+      color: #6264A7;
+      border: 2px solid #BFC0DA;
+      border-radius: 4px;
+  }
+  
+   .light .ac-pushButton:hover {
+      background-color: #6264A7;
+      border: 2px solid #6264A7;
+      color: white;
+  }
+  
+   .light .ac-pushButton:active {
+      background-color: #6264A7;
+      border: 2px solid #6264A7;
+      color: white;
+  }
+  
+   .light .ac-pushButton.expanded {
+      background-color: #6264A7;
+      border: 2px solid #6264A7;
+      color: white;
+  }
+  
+   .light .ac-pushButton.style-emphasis {
+      background-color: #6264A7;
+      border: 2px solid #6264A7;
+      color: white;
+  }
+  
+   .light .ac-input {
+      font-family: "Segoe UI", sans-serif;
+      font-size: 14px;
+      color: black;
+  }
+  
+   .light .ac-input.ac-input-required {
+      background-image: linear-gradient(45deg, transparent, transparent 50%, red 50%, red 100%);
+      background-position: top right;
+      background-size: .5em .5em;
+      background-repeat: no-repeat;
+  }
+  
+   .light .ac-input.ac-input-validation-failed {
+      border: 1px solid red !important;
+  }
+  
+   .light .ac-input.ac-textInput {
+      resize: none;
+  }
+  
+   .light .ac-input.ac-textInput.ac-multiline {
+      height: 72px;
+  }
+  
+   .light .ac-input.ac-textInput,  .light .ac-input.ac-numberInput,  .light .ac-input.ac-dateInput,  .light .ac-input.ac-timeInput {
+      height: 31px;
+  }
+  
+   .light .ac-input.ac-textInput,  .light .ac-input.ac-numberInput,  .light .ac-input.ac-dateInput,  .light .ac-input.ac-timeInput,  .light .ac-input.ac-multichoiceInput {
+      background-color: #F3F2F1;
+      border: 1px solid #F3F2F1;
+      border-radius: 4px;
+      padding: 4px 8px 4px 8px;
+  }
+  
+  /* ac-inlineActionButton should set height to the same as ac-input .light .ac-textInput */
+  
+  .ac-inlineActionButton {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+      vertical-align: middle;
+      cursor: pointer;
+      font-family: "Segoe UI", sans-serif;
+      font-size: 14px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      border: none;
+      background-color: transparent;
+      height: 31px;
+  }
+  
+   .light .ac-inlineActionButton.textOnly {
+      padding: 0 8px;
+  }
+  
+   .light .ac-inlineActionButton.iconOnly {
+      padding: 0;
+  }
+  
+   .light .ac-inlineActionButton:hover {
+      background-color: #EEEEEE;
+  }
+  
+   .light .ac-inlineActionButton:active {
+      background-color: #CCCCCC;
+  }
+  
+</style>

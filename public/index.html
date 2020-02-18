@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hello</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
 </head>
 
 <script type='text/javascript'>
@@ -17,12 +16,19 @@
 </script>
 <body>
   <h3>Adaptive Card Component:</h3>
-  <div>
+  <div style='background:gray;float:left;width:550px;'>
     <adaptive-card 
-      height="500px" 
-      width="400px" 
-      mode="dark"  
-      src='http://templates.adaptivecards.io/wunderground.com/Forecast.json' />
+      mode="dark" 
+      templating="true"
+      data="{ name: 'test'}"
+      />
+  </div>
+  <div style='float:left;width:550px;margin-left:25px;'>
+    <adaptive-card 
+      mode="light"
+      templating="true"
+      data="{ name: 'test'}"
+      />
   </div>
   <script>
     document.querySelector('adaptive-card').addEventListener('link-files', (ev) => {
