@@ -12,11 +12,12 @@
                     "items": [
                         {
                             "type": "TextBlock",
-                            "text": "Welcome to AdaptiveCards, this is a placeholder card",
+                            "text": "An error occured loading your card, make sure src is set correctly. ",
                             "isSubtle": true,
                             "wrap": true
                         }
-                    ]
+                    ],
+                    "style": "attention"
                 }
             ]
         }

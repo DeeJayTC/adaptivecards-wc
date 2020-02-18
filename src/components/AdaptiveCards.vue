@@ -5,10 +5,11 @@
 <script>
 import * as AdaptiveCards from 'adaptivecards/dist/adaptivecards';
 import { Template, EvaluationContext } from 'adaptivecards-templating/dist/adaptivecards-templating';
-import SampleCard from '../assets/emptyCard.json'
+import emptyCard from '../assets/emptyCard.json'
+import errorCard from '../assets/errorCard.json'
 import lightConfig from '../assets/lightConfig.json'
 import darkConfig from '../assets/darkConfig.json'
-import * as d3 from 'd3-fetch'
+import axios from 'axios'
 export default {
   name: 'AdaptiveCard',
   props: {
@@ -62,20 +63,25 @@ export default {
       }
 
       if(this.src === '' && this.card == null || this.card === ''){
-        return SampleCard;
+        return emptyCard;
       }
 
       // Try to load from url
-      if(this.validURL(this.src)){
-
+      if(this.validURL(this.src) || this.src.indexOf('./') == 0){
+        axios.get(this.src).then(function(card){
+          console.log(card);
+          return card;
+        });
       }
       // No Url we expect it to be object
       else{
-
+        if(typeof this.src === String || typeof this.src === Object){
+          return typeof this.src === Object ? JSON.stringify(this.src) : this.src;
+        }else{
+          return errorCard;
+        }
       }
-
-     // if (this.cardRemoteTemplate != null) return this.cardRemoteTemplate;
-     // return typeof this.src === 'Object' ? JSON.stringify(this.card) : this.src;
+      return errorCard;
     },
     dataParsed() {
       return this.data != null && this.data != undefined && typeof this.data === 'Object' ? JSON.stringify(this.data) : this.data;
@@ -86,12 +92,7 @@ export default {
 
   },
   mounted() {
-    console.log(this.data);
-    console.log(this.cardParsed);
-    console.log(this.dataParsed);
-    console.log(this.options);
-    console.log(this.mode);
-    console.log(this.templating);
+    console.log(this.src);
     this.renderCard();
   },
   methods: {
