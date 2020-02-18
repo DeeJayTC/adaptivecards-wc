@@ -36,8 +36,8 @@
                         },
                         {
                             "type": "Input.Text",
-                            "id": "myName",
-                            "placeholder": "Last, First"
+                            "placeholder": "Last, First",
+                            "id":"name"
                         },
                         {
                             "type": "TextBlock",

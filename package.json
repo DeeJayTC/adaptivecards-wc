@@ -1,8 +1,10 @@
 {
   "name": "adaptivecard-wc",
-  "version": "0.4.1",
+  "version": "0.8.0",
   "description": "Adaptive Cards webcomponents, as easy as images!",
-  "repository": {"url": "https://github.com/DeeJayTC/adaptivecard-component"},
+  "repository": {
+    "url": "https://github.com/DeeJayTC/adaptivecard-component"
+  },
   "main": "index.js",
   "scripts": {
     "serve": "vue-cli-service serve",

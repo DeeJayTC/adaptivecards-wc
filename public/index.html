@@ -30,10 +30,26 @@
       data="{ name: 'test'}"
       />
   </div>
+  <div id='cardResult'></div>
   <script>
-    document.querySelector('adaptive-card').addEventListener('link-files', (ev) => {
-      alert('link files: ' + ev.detail[0].selected.join(', '))
-    })
+    var cards = document.querySelectorAll('adaptive-card')
+
+    cards.forEach(function(card){
+      card.addEventListener('onActionClicked', (data) => {
+      var html = "";
+      data.detail.forEach(function(val) {
+        var keys = Object.keys(val);
+        html += "<div class = 'cat'>";
+        keys.forEach(function(key) {
+          html += "<strong>" + key + "</strong>: " + val[key] + "<br>";
+        });
+        html += "</div><br>";
+      });
+
+      document.getElementById('cardResult').innerHTML = html;
+      })
+    });
+
   </script>
 </body>
 

@@ -127,7 +127,7 @@ export default {
       }
 
       card.onExecuteAction = (action) => {
-        this.$emit('onActionClicked', action, action.data);
+        this.$emit('onActionClicked', action.data);
       };
 
       this.cardElement = card.render();
