@@ -27,7 +27,7 @@
   "dependencies": {
     "adaptivecards": "^1.2.5",
     "adaptivecards-templating": "^0.1.1-alpha.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "pretty-bytes": "^5.3.0",
     "vue": "^2.6.11",
     "vue-custom-element": "^3.2.12"
